@@ -46,7 +46,7 @@ describe('Sign Up', () => {
         cy.get('[data-test="signin-remember-me"]').should('not.be.checked');
         cy.get('[data-test="signin-remember-me"]').should('be.visible').click();
         cy.get('[data-testid="CheckBoxIcon"]').should('be.visible');
-        cy.get('[data-test="signin-submit"]').should('not.be.enabled')
+        cy.get('[data-test="signin-submit"]').should('not.be.enabled');
     });
 
     it('Login with valid username and password', () => {

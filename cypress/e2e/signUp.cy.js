@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { getRandomStringWithoutNumbers, getRandomPassword } from '/cypress/support/e2e.js'
-
 describe('Sign Up', () => {
 
     let commonStrings;
@@ -9,8 +7,7 @@ describe('Sign Up', () => {
     beforeEach(() => {
         cy.fixture('language/en').then((data) => {
             commonStrings = data;
-        });
-        cy.viewport(1920, 1080); // Set viewport 
+        }); 
     });
 
     const openSignUpPage = () => {

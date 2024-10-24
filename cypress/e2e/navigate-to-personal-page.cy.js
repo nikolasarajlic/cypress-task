@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { getRandomStringWithoutNumbers, getRandomPassword } from '/cypress/support/e2e.js'
-
 describe('Personal Page', () => {
 
     let commonStrings;
@@ -10,7 +8,6 @@ describe('Personal Page', () => {
         cy.fixture('language/en').then((data) => {
             commonStrings = data;
         });
-        cy.viewport(1920, 1080); // Set viewport 
     });
 
     const login = () => {
@@ -30,6 +27,6 @@ describe('Personal Page', () => {
     it('Navigate to My Account and Change Account Information', () => {
         login();
         cy.get('[data-test="nav-personal-tab"]').click();
-        verifyTransactionDetails(0); // Verify details for the first transaction
+        verifyTransactionDetails(0);
     });
 });

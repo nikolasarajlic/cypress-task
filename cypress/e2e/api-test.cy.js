@@ -1,8 +1,9 @@
-describe('GraphQL API Test - Bank Accounts', () => {
-    it('Should fetch and validate bank account information', () => {
-        
+describe('GraphQL Bank Account API Test', () => {
+    const apiUrl = 'http://localhost:3001/graphql';
+
+    it('should fetch bank accounts and validate the response', () => {
         const query = `
-            query {
+            query ListBankAccount {
                 listBankAccount {
                     id
                     uuid
@@ -17,35 +18,34 @@ describe('GraphQL API Test - Bank Accounts', () => {
             }
         `;
 
-        
+
         cy.request({
             method: 'POST',
-            url: 'http://localhost:3001/graphql',
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            },
+            url: apiUrl,
             body: {
                 query: query
+            },
+            headers: {
+                'Content-Type': 'application/json'
             }
         }).then((response) => {
-            
+            // Validate status code
             expect(response.status).to.eq(200);
+            console.log(response);
 
-            
-            const firstAccount = response.body?.data?.listBankAccount?.[0];
-            
-            
-            if (firstAccount) {
-                expect(firstAccount).to.have.property('id').that.equals('-8GYeBh5a');
-                expect(firstAccount).to.have.property('uuid').that.equals('e4c63622-d988-48fb-9216-79ac6eff8ae6');
-                expect(firstAccount).to.have.property('userId').that.equals('OJQxZl9KA');
-                expect(firstAccount).to.have.property('bankName').that.equals('Banka');
-                expect(firstAccount).to.have.property('accountNumber').that.equals('123456789');
-                expect(firstAccount).to.have.property('routingNumber').that.equals('987654321');
-                expect(firstAccount).to.have.property('isDeleted').that.equals(false);
-              
-            } 
+            // Validate the response body structure and data
+            const bankAccounts = response.body.data.listBankAccount;
+            const account = bankAccounts[0]
+
+                expect(account.id).to.eq(expectedAccount.id);
+                expect(account.uuid).to.eq(expectedAccount.uuid);
+                expect(account.userId).to.eq(expectedAccount.userId);
+                expect(account.bankName).to.eq(expectedAccount.bankName);
+                expect(account.accountNumber).to.eq(expectedAccount.accountNumber);
+                expect(account.routingNumber).to.eq(expectedAccount.routingNumber);
+                expect(account.isDeleted).to.eq(expectedAccount.isDeleted);
+                expect(account.createdAt).to.eq(expectedAccount.createdAt);
+                expect(account.modifiedAt).to.eq(expectedAccount.modifiedAt);
+            });
         });
     });
-});

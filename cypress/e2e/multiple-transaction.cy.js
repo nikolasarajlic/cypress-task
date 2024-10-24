@@ -1,16 +1,12 @@
 /// <reference types="cypress" />
 
-import { getRandomStringWithoutNumbers, getRandomPassword } from '/cypress/support/e2e.js';
-
 describe('Multiple Transactions', () => {
-
     let commonStrings;
 
     beforeEach(() => {
         cy.fixture('language/en').then((data) => {
             commonStrings = data;
         });
-        cy.viewport(1920, 1080);
     });
 
     const login = () => {
@@ -20,37 +16,37 @@ describe('Multiple Transactions', () => {
         cy.get('[data-test="signin-submit"]').should('be.enabled').click();
     };
 
-    it('Navigate to My account and chnage account inforamtion ', () => {
+    const createTransaction = (amount, description) => {
+        cy.get('[data-test="nav-top-new-transaction"]').click();
+        cy.get('[data-test="user-list-search-input"]').type('Ted');
+        cy.get('[data-test="user-list-item-uBmeaz5pX"]').click();
+        cy.get('#amount').type(amount);
+        cy.get('#transaction-create-description-input').type(description);
+        cy.intercept('POST', '/transactions').as('createTransaction');
+        cy.get('[data-test="transaction-create-submit-payment"]').should('be.enabled').click();
+        cy.get('[data-test="alert-bar-success"]').should('be.visible');
+        cy.wait('@createTransaction').its('response.statusCode').should('eq', 200);
+        cy.get('[data-test="new-transaction-return-to-transactions"]').click();
+    };
+
+    const applyTransactionFilters = (minClick, maxClick) => {
+        cy.get('[data-test="transaction-list-filter-amount-range-button"]').click({ force: true });
+        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click({ force: true });
+        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click(minClick, 0);
+        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click(maxClick, 0);
+        cy.get('body').type('{esc}'); 
+    };
+
+    it('Create and Filter Multiple Transactions', () => {
         login();
-        cy.get('[data-test="nav-top-new-transaction"]').click();
-        cy.get('[data-test="user-list-search-input"]').type('Ted');
-        cy.get('[data-test="user-list-item-uBmeaz5pX"]').click();
-        cy.get('#amount').type('121')
-        cy.get('#transaction-create-description-input').type('Test');
-        cy.intercept('POST', '/transactions').as('createTransaction');
-        cy.get('[data-test="transaction-create-submit-payment"]').should('be.enabled').click();
-        cy.get('[data-test="alert-bar-success"]').should('be.visible');
-        cy.wait('@createTransaction').its('response.statusCode').should('eq', 200);
-        cy.get('[data-test="new-transaction-return-to-transactions"]').click();
-        cy.get('[data-test="nav-top-new-transaction"]').click();
-        cy.get('[data-test="user-list-search-input"]').type('Ted');
-        cy.get('[data-test="user-list-item-uBmeaz5pX"]').click();
-        cy.get('#amount').type('221')
-        cy.get('#transaction-create-description-input').type('Test');
-        cy.intercept('POST', '/transactions').as('createTransaction');
-        cy.get('[data-test="transaction-create-submit-payment"]').should('be.enabled').click();
-        cy.get('[data-test="alert-bar-success"]').should('be.visible');
-        cy.wait('@createTransaction').its('response.statusCode').should('eq', 200);
-        cy.get('[data-test="new-transaction-return-to-transactions"]').click();
-        cy.get('[data-test="nav-personal-tab"]').click();
-        cy.get('[data-test="transaction-list-filter-amount-range-button"]').click();
-        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click();
-        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click(50, 0); 
-        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click(24, 0);
-        cy.get('body').type('{esc}');
+        createTransaction('121', 'Test');
+        createTransaction('221', 'Test');
         
+        cy.get('[data-test="nav-personal-tab"]').click();
+        applyTransactionFilters(50, 24);
+
+       
         cy.get('[data-test="transaction-list"]').contains('221');
         cy.get('[data-test="transaction-list"]').contains('121');
-        });
     });
-   
+});

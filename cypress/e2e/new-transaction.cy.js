@@ -1,12 +1,9 @@
 /// <reference types="cypress" />
 
-import { getRandomStringWithoutNumbers, getRandomPassword } from '/cypress/support/e2e.js';
-
 describe('New Transaction', () => {
     let commonStrings;
 
     beforeEach(() => {
-        // Load common strings from fixture
         cy.fixture('language/en').then((data) => {
             commonStrings = data;
         });
@@ -29,7 +26,6 @@ describe('New Transaction', () => {
         cy.intercept('POST', '/transactions').as('createTransaction');
         cy.get('[data-test="transaction-create-submit-payment"]').should('be.enabled').click();
         
-        // Check for success message and transaction response
         cy.get('[data-test="alert-bar-success"]').should('be.visible');
         cy.wait('@createTransaction').its('response.statusCode').should('eq', 200);
         cy.get('[data-test="new-transaction-return-to-transactions"]').click();

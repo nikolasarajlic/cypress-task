@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { getRandomStringWithoutNumbers, getRandomPassword } from '/cypress/support/e2e.js'
-
 describe('Sign Up', () => {
 
     let commonStrings;

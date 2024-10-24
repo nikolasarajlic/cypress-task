@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { getRandomStringWithoutNumbers, getRandomPassword } from '/cypress/support/e2e.js'
-
 describe('Bank Account', () => {
 
     let commonStrings;
@@ -24,7 +22,7 @@ describe('Bank Account', () => {
 
     const createBankAccount = () => {
         cy.get('[data-test="sidenav-bankaccounts"]').click();
-        cy.url().should('include', '/bankaccounts'); // Verify if the URL is correct after clicking
+        cy.url().should('include', '/bankaccounts');
         cy.get('[data-test="bankaccount-new"]').click();
         cy.url().should('include', '/bankaccounts/new');
         cy.get('#bankaccount-bankName-input').should('be.visible').type('Banka');

@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import { getRandomStringWithoutNumbers, getRandomPassword } from '/cypress/support/e2e.js'
-
 describe('Login', () => {
 
     let commonStrings;
@@ -57,13 +55,12 @@ describe('Login', () => {
         cy.get('[data-test="user-onboarding-dialog-title"]').should('contain', 'Get Started with Real World App');
         cy.get('[data-test="user-onboarding-next"]').should('be.visible').click();
         
-        // Bank account creation steps
         cy.get('#bankaccount-bankName-input').should('be.visible').type('Banka');
         cy.get('#bankaccount-routingNumber-input').should('be.visible').type('987654321');
         cy.get('#bankaccount-accountNumber-input').should('be.visible').type('123456789');
         cy.get('[data-test="bankaccount-submit"]').should('be.visible').click();
         
-        // Verify successful completion
+       
         cy.get('[data-test="user-onboarding-next"]').should('contain', 'Done').click(); 
         cy.get('[data-test="sidenav-user-full-name"]').should('be.visible').and('contain', 'Nikola');
     });

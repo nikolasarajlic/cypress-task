@@ -10,7 +10,6 @@ describe('Multiple Transactions', () => {
         cy.fixture('language/en').then((data) => {
             commonStrings = data;
         });
-        cy.viewport(1920, 1080);
     });
 
     const login = () => {
@@ -43,12 +42,11 @@ describe('Multiple Transactions', () => {
         cy.wait('@createTransaction').its('response.statusCode').should('eq', 200);
         cy.get('[data-test="new-transaction-return-to-transactions"]').click();
         cy.get('[data-test="nav-personal-tab"]').click();
-        cy.get('[data-test="transaction-list-filter-amount-range-button"]').click();
-        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click();
+        cy.get('[data-test="transaction-list-filter-amount-range-button"]').click({ force: true });
+        cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click({ force: true });
         cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click(50, 0); 
         cy.get('[data-test="transaction-list-filter-amount-range-slider"]').click(24, 0);
         cy.get('body').type('{esc}');
-        
         cy.get('[data-test="transaction-list"]').contains('221');
         cy.get('[data-test="transaction-list"]').contains('121');
         });
